@@ -1,0 +1,30 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          naver:
+            redirect-uri: ${NAVER_PROD_REDIRECT_URL}
+          google:
+            redirect-uri: ${GOOGLE_PROD_REDIRECT_URL}
+          kakao:
+            redirect-uri: ${KAKAO_PROD_REDIRECT_URL}
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+  serverAddress: ${PROD_SERVER_HOST}
+  url: ${PROD_SERVER_URL}
+  proxy:
+    url: ${PROD_PROXY_SERVER_URL}
+  port: 8080
