@@ -1,0 +1,9 @@
+spring:
+  config:
+    import:
+      - optional:file:env/spring.env[.properties]
+  profiles:
+    active: dev
+    group:
+      dev: dev, common
+      prod: prod, common
