@@ -21,7 +21,7 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://jitpack.io' }
+
 }
 
 dependencies {
@@ -34,8 +34,14 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+//	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:15.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-graphql'
-	implementation 'com.graphql-java-kickstart:graphql-java-servlet:11.3.0'
+	implementation 'name.nkonev.multipart-spring-graphql:multipart-spring-graphql:1.5.2'
+	implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
+
+//	implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
+//	implementation 'com.graphql-java-kickstart:graphql-java-servlet:15.0.0'
+//	implementation 'com.graphql-java-kickstart:graphql-java-tools:14.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
