@@ -1,0 +1,12 @@
+input CreateMarkingInput {
+    userId: String!
+    regionId: String!
+    title: String
+    content: String
+    poster: String
+    trashTypes: [String!]
+    location: GeoJsonPointInput
+    files: [FileInput]
+    isApproved: Boolean
+    category: Category
+}
