@@ -3,24 +3,12 @@ spring:
     mongodb:
       uri: ${DB_URL}
 
-  main:
-    allow-bean-definition-overriding: true
-
   servlet:
     multipart:
       enabled: true
       max-file-size: 10MB
       max-request-size: 50MB
 
-
-  logging:
-    level:
-      org:
-        hibernate:
-          SQL: debug
-        springframework:
-          web:
-            debug
   graphql:
     graphiql:
       enabled: true
@@ -96,4 +84,16 @@ springdoc:
   show-oauth2-endpoints: true
 
 file:
-  upload-dir: ./uploads/
+  upload-dir: uploads/markings
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+      springframework:
+        web:
+          debug
+        graphql:
+          debug
