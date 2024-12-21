@@ -1,0 +1,4 @@
+input FileInput {
+    name: String!
+    file: Upload!
+}
