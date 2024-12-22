@@ -1,0 +1,4 @@
+input GeoJsonPointInput {
+    latitude: Float!
+    longitude: Float!
+}
