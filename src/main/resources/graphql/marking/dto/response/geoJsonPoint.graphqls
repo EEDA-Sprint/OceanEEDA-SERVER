@@ -1,0 +1,4 @@
+type GeoJsonPoint {
+    latitude: Float!
+    longitude: Float!
+}
