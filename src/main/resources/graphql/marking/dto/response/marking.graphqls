@@ -1,0 +1,14 @@
+type Marking {
+    id: ID!
+    userId: String!
+    regionId: String!
+    title: String
+    content: String
+    poster: String
+    trashTypes: [String!]
+    location: GeoJsonPoint
+    files: [File!]
+    createdAt: DateTime
+    isApproved: Boolean
+    category: Category
+}
