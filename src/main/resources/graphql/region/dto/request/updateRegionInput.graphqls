@@ -1,0 +1,3 @@
+input UpdateRegionInput {
+    name: String
+}
