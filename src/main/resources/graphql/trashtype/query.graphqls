@@ -1,0 +1,4 @@
+extend type Query {
+    getTrashTypeById(id: ID!): TrashType
+    getAllTrashTypes: [TrashType!]!
+}
