@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 @Configuration
-public class GraphQLConfig {
-
+public class GraphQlConfig {
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder
-                .scalar(ExtendedScalars.Upload);
+                .scalar(ExtendedScalars.DateTime);
     }
 }
