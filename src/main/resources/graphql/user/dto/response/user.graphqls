@@ -1,0 +1,8 @@
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    role: Role!
+    socialLoginType: Type
+    createdAt: DateTime
+}
