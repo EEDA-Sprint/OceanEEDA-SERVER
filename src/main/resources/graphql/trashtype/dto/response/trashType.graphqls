@@ -1,0 +1,4 @@
+type TrashType {
+    id: ID!
+    name: String!
+}
