@@ -1,0 +1,6 @@
+enum Type {
+    GOOGLE
+    NAVER
+    KAKAO
+    NONE
+}
