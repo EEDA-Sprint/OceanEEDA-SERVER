@@ -1,0 +1,4 @@
+extend type Query {
+    getMarkingById(id: ID!): Marking
+    getAllMarkings: [Marking!]!
+}
