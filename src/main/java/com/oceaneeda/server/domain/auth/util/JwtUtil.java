@@ -1,9 +1,10 @@
 package com.oceaneeda.server.domain.auth.util;
 
 import com.oceaneeda.server.domain.user.domain.value.Role;
-import com.oceaneeda.server.global.exception.ExpiredRefreshTokenException;
 import com.oceaneeda.server.global.exception.ExpiredTokenException;
+import com.oceaneeda.server.global.exception.InvalidTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,24 +28,23 @@ public class JwtUtil {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public Long getId(String token) {
-        return Long.valueOf(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("sub", String.class));
+    public String getId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("sub", String.class);
     }
 
-    public boolean validateRefreshToken(String token) {
+    public void shouldRefreshTokenValid(String token) {
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getExpiration()
-                    .after(new Date());
-            return true;
+                    .parse(token);
         } catch (ExpiredJwtException e) {
-            throw new ExpiredRefreshTokenException("Expired refresh token");
+            throw new ExpiredTokenException("Expired token");
+        } catch (JwtException e) {
+            throw new InvalidTokenException("Invalid token");
         }
     }
+
 
 //    public String getCategory(String token) {
 //        try {
@@ -66,22 +66,6 @@ public class JwtUtil {
 //            return e.getClaims().get("loginType", String.class);
 //        }
 //    }
-
-    public void isExpired(String token) {
-        try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException("Expired token");
-        }
-    }
-
-    public void isExpiredRefresh(String token) {
-        try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredRefreshTokenException("Expired refresh token");
-        }
-    }
 
     public String createAccessToken(String id, Role role, String loginType) {
         return createJwt("access", id, role, loginType, accessTokenExpiration);
