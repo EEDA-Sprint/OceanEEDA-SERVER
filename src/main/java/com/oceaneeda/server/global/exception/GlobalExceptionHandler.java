@@ -25,12 +25,13 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
                     .errorType(ErrorType.UNAUTHORIZED)
                     .message(ex.getMessage())
                     .build();
-        } else if (ex instanceof ExpiredRefreshTokenException) {
+        } else if (ex instanceof InvalidTokenException) {
             return GraphQLError.newError()
                     .errorType(ErrorType.UNAUTHORIZED)
                     .message(ex.getMessage())
                     .build();
-        } else if (ex instanceof IllegalArgumentException) {
+        }
+        else if (ex instanceof IllegalArgumentException) {
             return GraphQLError.newError()
                     .errorType(ErrorType.BAD_REQUEST)
                     .message(ex.getMessage())
