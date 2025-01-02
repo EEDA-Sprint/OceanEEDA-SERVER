@@ -2,13 +2,16 @@ package com.oceaneeda.server.domain.auth.presentation;
 
 
 import com.oceaneeda.server.domain.auth.presentation.dto.request.LoginInput;
+import com.oceaneeda.server.domain.auth.presentation.dto.request.RefreshInput;
 import com.oceaneeda.server.domain.auth.presentation.dto.response.TokenResponse;
 import com.oceaneeda.server.domain.auth.util.JwtUtil;
 import com.oceaneeda.server.domain.user.domain.User;
 import com.oceaneeda.server.domain.user.domain.repository.UserRepository;
 import com.oceaneeda.server.global.exception.EntityNotFoundException;
 import com.oceaneeda.server.global.exception.UnauthorizedException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,5 +40,18 @@ public class AuthMutationController {
         return new TokenResponse(accessToken, refreshToken);
     }
 
+    @MutationMapping
+    public TokenResponse refresh(@Argument RefreshInput input) {
+        jwtUtil.shouldRefreshTokenValid(input.refreshToken());
+
+        String userId = jwtUtil.getId(input.refreshToken());
+
+        User user = userRepository.findById(new ObjectId(userId))
+                .orElseThrow(() -> new EntityNotFoundException("Invalid userId"));
+
+        String accessToken = jwtUtil.createAccessToken(user.getId().toHexString(), user.getRole(), user.getSocialLoginType().name());
+
+        return new TokenResponse(accessToken, input.refreshToken());
+    }
 
 }
