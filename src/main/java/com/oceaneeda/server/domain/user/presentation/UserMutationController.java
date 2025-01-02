@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class UserMutationController {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     // Mutation: 사용자 생성
     @MutationMapping
@@ -30,11 +32,10 @@ public class UserMutationController {
         newUser.setId(new ObjectId());
         newUser.setUsername(input.username());
         newUser.setEmail(input.email());
-        newUser.setPassword(input.password());
+        newUser.setPassword(passwordEncoder.encode(input.password()));
         newUser.setRole(Role.ROLE_USER);
         newUser.setSocialLoginType(Type.NONE);
         newUser.setCreatedAt(LocalDateTime.now());
-
         return UserResponse.from(userRepository.save(newUser));
     }
 
@@ -51,7 +52,7 @@ public class UserMutationController {
             existingUser.setEmail(input.email());
         }
         if (input.password() != null) {
-            existingUser.setPassword(input.password());
+            existingUser.setPassword(passwordEncoder.encode(input.password()));
         }
 
         return UserResponse.from(userRepository.save(existingUser));
