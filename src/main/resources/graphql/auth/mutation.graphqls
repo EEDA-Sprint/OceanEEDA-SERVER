@@ -1,3 +1,4 @@
 extend type Mutation {
     login(input: LoginInput!): Token!
+    refresh(input: RefreshInput!): Token!
 }
