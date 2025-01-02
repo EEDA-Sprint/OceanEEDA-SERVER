@@ -34,9 +34,9 @@ public record MarkingResponse (
                 .poster(marking.getPoster())
                 .trashTypes(marking.getTrashTypes())
                 .location(new GeoJsonPointResponse( (float) marking.getLocation().getX(), (float) marking.getLocation().getY())) // 기존 로케이션 그대로 전달
-                .files(marking.getFiles().stream()
-                        .map(FileResponse::from)
-                        .toList())
+                .files(marking.getFiles() != null ?
+                        marking.getFiles().stream().map(FileResponse::from).toList() :
+                        List.of())
                 .createdAt(marking.getCreatedAt().atOffset(ZoneOffset.UTC)) // OffsetDateTime으로 변환
                 .isApproved(marking.getIsApproved())
                 .category(marking.getCategory())
