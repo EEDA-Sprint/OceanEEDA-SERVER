@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MarkingRepository extends MongoRepository<Marking, ObjectId> {
+    boolean existsByIdAndUserId(ObjectId id, String userId);
 }
