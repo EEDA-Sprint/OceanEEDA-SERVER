@@ -1,5 +1,5 @@
 extend type Mutation {
     createRegion(input: CreateRegionInput!): Region!
     updateRegion(id: ID!, input: UpdateRegionInput!): Region!
-    deleteRegion(id: ID!): Boolean!
+    deleteRegion(id: ID!): Region!
 }
