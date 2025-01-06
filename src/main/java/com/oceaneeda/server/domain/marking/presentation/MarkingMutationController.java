@@ -1,5 +1,7 @@
 package com.oceaneeda.server.domain.marking.presentation;
 
+import com.oceaneeda.server.domain.auth.annotation.Authenticated;
+import com.oceaneeda.server.domain.auth.annotation.CheckOwnership;
 import com.oceaneeda.server.domain.marking.domain.Marking;
 import com.oceaneeda.server.domain.marking.domain.repository.MarkingRepository;
 import com.oceaneeda.server.domain.marking.presentation.dto.request.CreateMarkingInput;
@@ -28,6 +30,7 @@ public class MarkingMutationController {
     private final MarkingRepository markingRepository;
     private final FileStorageService fileStorageService;
 
+    @Authenticated
     @MutationMapping
     public MarkingResponse createMarking(@Argument("input") CreateMarkingInput input) throws IOException {
         Marking marking = new Marking();
@@ -60,6 +63,7 @@ public class MarkingMutationController {
         return MarkingResponse.from(markingRepository.save(marking));
     }
 
+    @CheckOwnership
     @MutationMapping
     public MarkingResponse updateMarking(@Argument ObjectId id,
                                  @Argument("input") UpdateMarkingInput input) throws IOException {
@@ -92,12 +96,13 @@ public class MarkingMutationController {
     }
 
     // DELETE
+    @CheckOwnership
     @MutationMapping
-    public Boolean deleteMarking(@Argument ObjectId id) {
-        if (!markingRepository.existsById(id)) {
-            throw new EntityNotFoundException("Marking not found by id: " + id);
-        }
-        markingRepository.deleteById(id);
-        return true;
+    public MarkingResponse deleteMarking(@Argument ObjectId id) {
+        Marking deletedMarking = markingRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Marking not found by id: " + id));
+
+        markingRepository.delete(deletedMarking);
+        return MarkingResponse.from(deletedMarking);
     }
 }
