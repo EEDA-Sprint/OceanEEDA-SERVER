@@ -1,4 +1,5 @@
 type Query {
     getUserById(id: ID!): User
     getAllUsers: [User!]!
+    getUserByCurrent: User
 }
