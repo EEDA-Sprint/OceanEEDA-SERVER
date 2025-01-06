@@ -1,9 +1,11 @@
 package com.oceaneeda.server.domain.trashtype.presentation;
 
+import com.oceaneeda.server.domain.auth.annotation.AdminOnly;
 import com.oceaneeda.server.domain.trashtype.domain.TrashType;
 import com.oceaneeda.server.domain.trashtype.domain.repository.TrashTypeRepository;
 import com.oceaneeda.server.domain.trashtype.presentation.dto.request.CreateTrashTypeInput;
 import com.oceaneeda.server.domain.trashtype.presentation.dto.request.UpdateTrashTypeInput;
+import com.oceaneeda.server.domain.trashtype.presentation.dto.response.TrashTypeResponse;
 import com.oceaneeda.server.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -20,18 +22,20 @@ public class TrashTypeMutationController {
     private final TrashTypeRepository trashTypeRepository;
 
     // Mutation: TrashType 생성
+    @AdminOnly
     @MutationMapping
-    public TrashType createTrashType(@Argument("input") CreateTrashTypeInput input) {
+    public TrashTypeResponse createTrashType(@Argument("input") CreateTrashTypeInput input) {
         TrashType newTrashType = new TrashType();
         newTrashType.setId(new ObjectId()); // MongoDB ID 생성
         newTrashType.setName(input.name());
 
-        return trashTypeRepository.save(newTrashType);
+        return TrashTypeResponse.from(trashTypeRepository.save(newTrashType));
     }
 
     // Mutation: TrashType 정보 수정
+    @AdminOnly
     @MutationMapping
-    public TrashType updateTrashType(@Argument ObjectId id, @Argument("input") UpdateTrashTypeInput input) {
+    public TrashTypeResponse updateTrashType(@Argument ObjectId id, @Argument("input") UpdateTrashTypeInput input) {
         TrashType existingTrashType = trashTypeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("TrashType not found by id: " + id));
 
@@ -39,19 +43,18 @@ public class TrashTypeMutationController {
             existingTrashType.setName(input.name());
         }
 
-        return trashTypeRepository.save(existingTrashType);
+        return TrashTypeResponse.from(trashTypeRepository.save(existingTrashType));
     }
 
     // Mutation: TrashType 삭제
+    @AdminOnly
     @MutationMapping
-    public Boolean deleteTrashType(@Argument ObjectId id) {
-        Optional<TrashType> trashTypeToDelete = trashTypeRepository.findById(id);
+    public TrashTypeResponse deleteTrashType(@Argument ObjectId id) {
+        TrashType deletedTrashType = trashTypeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("TrashType not found by id: " + id));
 
-        if (trashTypeToDelete.isEmpty()) {
-            return false;
-        }
 
-        trashTypeRepository.deleteById(id);
-        return true;
+        trashTypeRepository.delete(deletedTrashType);
+        return TrashTypeResponse.from(deletedTrashType);
     }
 }
