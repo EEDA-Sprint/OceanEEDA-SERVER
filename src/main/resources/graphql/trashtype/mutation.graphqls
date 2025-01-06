@@ -1,5 +1,5 @@
 extend type Mutation {
     createTrashType(input: CreateTrashTypeInput!): TrashType!
     updateTrashType(id: ID!, input: UpdateTrashTypeInput!): TrashType!
-    deleteTrashType(id: ID!): Boolean!
+    deleteTrashType(id: ID!): TrashType!
 }
