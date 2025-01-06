@@ -2,6 +2,7 @@ package com.oceaneeda.server.domain.trashtype.presentation;
 
 import com.oceaneeda.server.domain.trashtype.domain.TrashType;
 import com.oceaneeda.server.domain.trashtype.domain.repository.TrashTypeRepository;
+import com.oceaneeda.server.domain.trashtype.presentation.dto.response.TrashTypeResponse;
 import com.oceaneeda.server.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -19,14 +20,18 @@ public class TrashTypeQueryController {
 
     // Query: 특정 TrashType 조회
     @QueryMapping
-    public TrashType getTrashTypeById(@Argument ObjectId id) {
+    public TrashTypeResponse getTrashTypeById(@Argument ObjectId id) {
         return trashTypeRepository.findById(id)
+                .map(TrashTypeResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException("TrashType not found by id: " + id));
     }
 
     // Query: 전체 TrashTypes 조회
     @QueryMapping
-    public List<TrashType> getAllTrashTypes() {
-        return trashTypeRepository.findAll();
+    public List<TrashTypeResponse> getAllTrashTypes() {
+        return trashTypeRepository.findAll()
+                .stream()
+                .map(TrashTypeResponse::from)
+                .toList();
     }
 }
