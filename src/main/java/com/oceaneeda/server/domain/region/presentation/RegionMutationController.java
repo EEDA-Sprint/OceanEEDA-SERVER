@@ -1,9 +1,11 @@
 package com.oceaneeda.server.domain.region.presentation;
 
+import com.oceaneeda.server.domain.auth.annotation.AdminOnly;
 import com.oceaneeda.server.domain.region.domain.Region;
 import com.oceaneeda.server.domain.region.domain.repository.RegionRepository;
 import com.oceaneeda.server.domain.region.presentation.dto.request.CreateRegionInput;
 import com.oceaneeda.server.domain.region.presentation.dto.request.UpdateRegionInput;
+import com.oceaneeda.server.domain.region.presentation.dto.response.RegionResponse;
 import com.oceaneeda.server.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -20,18 +22,20 @@ public class RegionMutationController {
     private final RegionRepository regionRepository;
 
     // Mutation: Region 생성
+    @AdminOnly
     @MutationMapping
-    public Region createRegion(@Argument("input") CreateRegionInput input) {
+    public RegionResponse createRegion(@Argument("input") CreateRegionInput input) {
         Region newRegion = new Region();
         newRegion.setId(new ObjectId()); // MongoDB ID 생성
         newRegion.setName(input.name());
 
-        return regionRepository.save(newRegion);
+        return RegionResponse.from(regionRepository.save(newRegion));
     }
 
     // Mutation: Region 정보 수정
+    @AdminOnly
     @MutationMapping
-    public Region updateRegion(@Argument ObjectId id, @Argument("input") UpdateRegionInput input) {
+    public RegionResponse updateRegion(@Argument ObjectId id, @Argument("input") UpdateRegionInput input) {
         Region existingRegion = regionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Region not found by id: " + id));
 
@@ -39,18 +43,17 @@ public class RegionMutationController {
             existingRegion.setName(input.name());
         }
 
-        return regionRepository.save(existingRegion);
+        return RegionResponse.from(regionRepository.save(existingRegion));
     }
 
     // Mutation: Region 삭제
+    @AdminOnly
     @MutationMapping
-    public Boolean deleteRegion(@Argument ObjectId id) {
-        Optional<Region> regionToDelete = regionRepository.findById(id);
-        if (regionToDelete.isEmpty()) {
-            return false;
-        }
+    public RegionResponse deleteRegion(@Argument ObjectId id) {
+        Region deletedRegion = regionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Region not found by id: " + id));
 
-        regionRepository.deleteById(id);
-        return true;
+        regionRepository.delete(deletedRegion);
+        return RegionResponse.from(deletedRegion);
     }
 }
