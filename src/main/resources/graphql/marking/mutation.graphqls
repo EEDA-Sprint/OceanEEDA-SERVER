@@ -1,5 +1,5 @@
 extend type Mutation {
     createMarking(input: CreateMarkingInput!): Marking!
     updateMarking(id: ID!, input: UpdateMarkingInput!): Marking!
-    deleteMarking(id: ID!): Boolean!
+    deleteMarking(id: ID!): Marking!
 }
