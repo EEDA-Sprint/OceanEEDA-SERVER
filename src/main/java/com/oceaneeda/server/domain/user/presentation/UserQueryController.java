@@ -1,5 +1,7 @@
 package com.oceaneeda.server.domain.user.presentation;
 
+import com.oceaneeda.server.domain.auth.annotation.Authenticated;
+import com.oceaneeda.server.domain.auth.repository.AuthRepository;
 import com.oceaneeda.server.domain.user.domain.User;
 import com.oceaneeda.server.domain.user.domain.repository.UserRepository;
 import com.oceaneeda.server.domain.user.presentation.dto.response.UserResponse;
@@ -17,6 +19,7 @@ import java.util.List;
 public class UserQueryController {
 
     private final UserRepository userRepository;
+    private final AuthRepository authRepository;
 
     // Query: 특정 사용자 조회
     @QueryMapping
@@ -33,5 +36,11 @@ public class UserQueryController {
                 .stream()
                 .map(UserResponse::from)
                 .toList();
+    }
+
+    @Authenticated
+    @QueryMapping
+    public UserResponse getUserByCurrent() {
+        return UserResponse.from(authRepository.getCurrentUser());
     }
 }
