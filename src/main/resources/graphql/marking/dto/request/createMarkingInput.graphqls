@@ -1,5 +1,4 @@
 input CreateMarkingInput {
-    userId: String!
     regionId: String!
     title: String
     content: String
