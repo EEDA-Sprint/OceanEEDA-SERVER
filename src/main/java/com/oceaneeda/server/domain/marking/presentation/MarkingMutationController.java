@@ -2,6 +2,7 @@ package com.oceaneeda.server.domain.marking.presentation;
 
 import com.oceaneeda.server.domain.auth.annotation.Authenticated;
 import com.oceaneeda.server.domain.auth.annotation.CheckOwnership;
+import com.oceaneeda.server.domain.auth.repository.AuthRepository;
 import com.oceaneeda.server.domain.marking.domain.Marking;
 import com.oceaneeda.server.domain.marking.domain.repository.MarkingRepository;
 import com.oceaneeda.server.domain.marking.presentation.dto.request.CreateMarkingInput;
@@ -27,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarkingMutationController {
 
+    private final AuthRepository authRepository;
     private final MarkingRepository markingRepository;
     private final FileStorageService fileStorageService;
 
@@ -35,7 +37,7 @@ public class MarkingMutationController {
     public MarkingResponse createMarking(@Argument("input") CreateMarkingInput input) throws IOException {
         Marking marking = new Marking();
         marking.setId(new ObjectId());
-        marking.setUserId(input.userId());
+        marking.setUserId(authRepository.getCurrentUser().getId().toHexString());
         marking.setRegionId(input.regionId());
         marking.setTitle(input.title());
         marking.setContent(input.content());
