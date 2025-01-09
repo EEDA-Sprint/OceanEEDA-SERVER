@@ -5,7 +5,6 @@ import com.oceaneeda.server.domain.marking.domain.value.Category;
 import java.util.List;
 
 public record CreateMarkingInput(
-        String userId,
         String regionId,
         String title,
         String content,
