@@ -65,7 +65,7 @@ public class MarkingMutationController {
         return MarkingResponse.from(markingRepository.save(marking));
     }
 
-    @CheckOwnership
+    @Authenticated
     @MutationMapping
     public MarkingResponse updateMarking(@Argument ObjectId id,
                                  @Argument("input") UpdateMarkingInput input) throws IOException {
@@ -98,7 +98,7 @@ public class MarkingMutationController {
     }
 
     // DELETE
-    @CheckOwnership
+    @Authenticated
     @MutationMapping
     public MarkingResponse deleteMarking(@Argument ObjectId id) {
         Marking deletedMarking = markingRepository.findById(id)
