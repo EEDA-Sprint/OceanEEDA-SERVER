@@ -9,7 +9,6 @@ import com.oceaneeda.server.domain.user.domain.User;
 import com.oceaneeda.server.domain.user.domain.repository.UserRepository;
 import com.oceaneeda.server.global.exception.EntityNotFoundException;
 import com.oceaneeda.server.global.exception.UnauthorizedException;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.graphql.data.method.annotation.Argument;
