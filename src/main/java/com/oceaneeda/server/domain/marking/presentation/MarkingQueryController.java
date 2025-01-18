@@ -24,9 +24,20 @@ public class MarkingQueryController {
 
     @QueryMapping
     public MarkingResponse getMarkingById(@Argument ObjectId id) {
-        return markingRepository.findById(id)
-                .map(MarkingResponse::from)
+        User user = authRepository.getNullableCurrentUser();
+        Marking marking = markingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Marking not found by id: " + id));
+
+        if (user == null) {
+            if (!Boolean.TRUE.equals(marking.getIsApproved())) {
+                throw new EntityNotFoundException("Marking not found or not accessible for non-authenticated users.");
+            }
+        } else if (user.getRole() != Role.ROLE_ADMIN) {
+            if (!Boolean.TRUE.equals(marking.getIsApproved()) && !marking.getUserId().equals(user.getId())) {
+                throw new EntityNotFoundException("Marking not found or not accessible for the current user.");
+            }
+        }
+        return MarkingResponse.from(marking);
     }
 
     @QueryMapping
