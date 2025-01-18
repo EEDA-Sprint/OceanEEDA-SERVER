@@ -9,12 +9,14 @@ import com.oceaneeda.server.domain.user.domain.User;
 import com.oceaneeda.server.domain.user.domain.value.Role;
 import com.oceaneeda.server.global.exception.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -32,6 +34,8 @@ public class AuthAspect {
     public void checkOwnership(JoinPoint joinPoint, CheckOwnership checkOwnership) {
         User currentUser = authRepository.getCurrentUser();
         ObjectId markingId = (ObjectId) joinPoint.getArgs()[0];
+        log.warn("체크 오너쉽 : "+markingId);
+        log.warn("현재 유저 : "+currentUser.getId());
 
         if (currentUser.getRole() != Role.ROLE_ADMIN && !isOwner(markingId, currentUser.getId().toHexString())) {
             throw new AccessDeniedException("권한이 없습니다.");
