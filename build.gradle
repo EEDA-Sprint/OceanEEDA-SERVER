@@ -41,6 +41,9 @@ dependencies {
 	implementation 'name.nkonev.multipart-spring-graphql:multipart-spring-graphql:1.5.2'
 	implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
 
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 //	implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
 //	implementation 'com.graphql-java-kickstart:graphql-java-servlet:15.0.0'
 //	implementation 'com.graphql-java-kickstart:graphql-java-tools:14.0.0'
