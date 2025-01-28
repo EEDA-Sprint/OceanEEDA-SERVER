@@ -97,3 +97,9 @@ logging:
           debug
         graphql:
           debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
