@@ -82,8 +82,8 @@ public class MarkingMutationController {
         if (input.category() != null) marking.setCategory(input.category());
 
         // 파일 저장 로직
-        List<Marking.File> savedFiles = new ArrayList<>();
         if (input.files() != null) {
+            List<Marking.File> savedFiles = new ArrayList<>();
             for (FileInput file : input.files()) {
                 String filePath = fileStorageService.storeFile(file.file());
                 Marking.File markingFile = new Marking.File();
@@ -91,8 +91,8 @@ public class MarkingMutationController {
                 markingFile.setPath(filePath);
                 savedFiles.add(markingFile);
             }
+            marking.setFiles(savedFiles);
         }
-        marking.setFiles(savedFiles);
 
         return MarkingResponse.from(markingRepository.save(marking));
     }
