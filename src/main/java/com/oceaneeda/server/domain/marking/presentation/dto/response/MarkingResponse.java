@@ -33,7 +33,7 @@ public record MarkingResponse (
                 .content(marking.getContent())
                 .poster(marking.getPoster())
                 .trashTypes(marking.getTrashTypes())
-                .location(new GeoJsonPointResponse( (float) marking.getLocation().getX(), (float) marking.getLocation().getY())) // 기존 로케이션 그대로 전달
+                .location(GeoJsonPointResponse.from(marking.getLocation())) // 기존 로케이션 그대로 전달
                 .files(marking.getFiles() != null ?
                         marking.getFiles().stream().map(FileResponse::from).toList() :
                         List.of())
