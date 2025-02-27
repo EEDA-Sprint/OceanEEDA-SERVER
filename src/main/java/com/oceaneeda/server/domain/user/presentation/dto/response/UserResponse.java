@@ -1,6 +1,7 @@
 package com.oceaneeda.server.domain.user.presentation.dto.response;
 
 import com.oceaneeda.server.domain.user.domain.User;
+import com.oceaneeda.server.domain.user.domain.value.Role;
 import com.oceaneeda.server.domain.user.domain.value.Type;
 import lombok.Builder;
 import org.bson.types.ObjectId;
@@ -13,7 +14,7 @@ public record UserResponse(
         ObjectId id,
         String username,
         String email,
-        RoleResponse role,
+        Role role,
         Type socialLoginType,
         OffsetDateTime createdAt
 ) {
@@ -22,7 +23,7 @@ public record UserResponse(
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(RoleResponse.valueOf(user.getRole().name().split("_")[1]))
+                .role(user.getRole())
                 .socialLoginType(user.getSocialLoginType())
                 .createdAt(user.getCreatedAt().atOffset(ZoneOffset.UTC))
                 .build();
