@@ -5,6 +5,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-//@Authenticated
-public @interface CheckOwnership {
+public @interface PublicOrOwner {
+    Class<?> resourceType();
 }
