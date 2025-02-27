@@ -1,9 +1,7 @@
 package com.oceaneeda.server.domain.region.presentation;
 
-import com.oceaneeda.server.domain.region.domain.Region;
-import com.oceaneeda.server.domain.region.domain.repository.RegionRepository;
 import com.oceaneeda.server.domain.region.presentation.dto.response.RegionResponse;
-import com.oceaneeda.server.global.exception.EntityNotFoundException;
+import com.oceaneeda.server.domain.region.service.QueryRegionService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -16,21 +14,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RegionQueryController {
 
-    private final RegionRepository regionRepository;
+    private final QueryRegionService queryRegionService;
 
-    // Query: 특정 Region 조회
     @QueryMapping
     public RegionResponse getRegionById(@Argument ObjectId id) {
-        return regionRepository.findById(id)
-                .map(RegionResponse::from)
-                .orElseThrow(() -> new EntityNotFoundException("Region not found by id: " + id));
+        return RegionResponse.from(queryRegionService.readOne(id));
     }
 
-    // Query: 전체 Region 조회
     @QueryMapping
     public List<RegionResponse> getAllRegions() {
-        return regionRepository.findAll()
-                .stream()
+        return queryRegionService.readAll().stream()
                 .map(RegionResponse::from)
                 .toList();
     }
