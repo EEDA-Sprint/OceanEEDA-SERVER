@@ -1,10 +1,10 @@
 package com.oceaneeda.server.domain.auth.interceptor;
 
 import com.oceaneeda.server.domain.auth.service.implementation.AuthUpdater;
-import com.oceaneeda.server.domain.auth.util.JwtUtil;
+import com.oceaneeda.server.domain.auth.util.BearerTokenExtractor;
+import com.oceaneeda.server.domain.auth.util.JwtParser;
 import com.oceaneeda.server.domain.user.domain.User;
-import com.oceaneeda.server.domain.user.domain.repository.UserRepository;
-import com.oceaneeda.server.global.exception.EntityNotFoundException;
+import com.oceaneeda.server.domain.user.service.implementation.UserReader;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,22 +20,23 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private final JwtUtil jwtUtil;
+    private final UserReader userReader;
     private final AuthUpdater authUpdater;
-    private final UserRepository userRepository;
+    private final JwtParser jwtParser;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+
         String bearer = request.getHeader(AUTHORIZATION);
-        log.warn("Bearer token : {}", bearer);
 
         if (bearer == null) {
             authUpdater.updateCurrentUser(null);
         } else {
-            String userId = jwtUtil.getId(bearer.replace("Bearer", "").trim());
-            User user = userRepository.findById(new ObjectId(userId))
-                    .orElseThrow(() -> new EntityNotFoundException("Invalid userId"));
+            String jwt = BearerTokenExtractor.extract(bearer);
+            ObjectId userId = jwtParser.getIdFromJwt(jwt);
+
+            User user = userReader.read(userId);
 
             authUpdater.updateCurrentUser(user);
         }
