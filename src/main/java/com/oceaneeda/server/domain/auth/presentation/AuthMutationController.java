@@ -4,53 +4,27 @@ package com.oceaneeda.server.domain.auth.presentation;
 import com.oceaneeda.server.domain.auth.presentation.dto.request.LoginInput;
 import com.oceaneeda.server.domain.auth.presentation.dto.request.RefreshInput;
 import com.oceaneeda.server.domain.auth.presentation.dto.response.TokenResponse;
-import com.oceaneeda.server.domain.auth.util.JwtUtil;
-import com.oceaneeda.server.domain.user.domain.User;
-import com.oceaneeda.server.domain.user.domain.repository.UserRepository;
-import com.oceaneeda.server.global.exception.EntityNotFoundException;
-import com.oceaneeda.server.global.exception.UnauthorizedException;
+import com.oceaneeda.server.domain.auth.service.CommandAuthService;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
 public class AuthMutationController {
 
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final CommandAuthService commandAuthService;
 
     @MutationMapping
     public TokenResponse login(@Argument LoginInput input) {
-        User user = userRepository.findByEmail(input.email())
-                .orElseThrow(() -> new EntityNotFoundException("Invalid username or password"));
-
-        if (!passwordEncoder.matches(input.password(), user.getPassword())) {
-            throw new UnauthorizedException("Invalid username or password");
-        }
-
-        String accessToken = jwtUtil.createAccessToken(user.getId().toHexString(), user.getRole(), user.getSocialLoginType().name());
-        String refreshToken = jwtUtil.createRefreshToken(user.getId().toHexString(), user.getRole(), user.getSocialLoginType().name());
-
-        return new TokenResponse(accessToken, refreshToken);
+        return TokenResponse.from(commandAuthService.login(input.toCommand()));
     }
 
     @MutationMapping
     public TokenResponse refresh(@Argument RefreshInput input) {
-        jwtUtil.shouldRefreshTokenValid(input.refreshToken());
 
-        String userId = jwtUtil.getId(input.refreshToken());
-
-        User user = userRepository.findById(new ObjectId(userId))
-                .orElseThrow(() -> new EntityNotFoundException("Invalid userId"));
-
-        String accessToken = jwtUtil.createAccessToken(user.getId().toHexString(), user.getRole(), user.getSocialLoginType().name());
-
-        return new TokenResponse(accessToken, input.refreshToken());
+        return TokenResponse.from(commandAuthService.refresh(input.refreshToken()));
     }
 
 }
