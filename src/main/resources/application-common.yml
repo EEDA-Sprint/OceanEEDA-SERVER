@@ -16,13 +16,6 @@ spring:
       printer:
         enabled: true
 
-  jwt:
-    secret: ${JWT_SECRET_KEY}
-    access:
-      expiration: ${ACCESS_TIME}
-    refresh:
-      expiration: ${REFRESH_TIME}
-
   security:
     oauth2:
       client:
@@ -103,3 +96,8 @@ management:
     web:
       exposure:
         include: prometheus
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expiration-time: ${ACCESS_TIME}
+  refresh-token-expiration-time: ${REFRESH_TIME}
