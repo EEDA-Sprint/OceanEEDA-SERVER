@@ -12,8 +12,8 @@ import java.util.List;
 @Builder
 public record MarkingResponse (
         ObjectId id,
-        String userId,
-        String regionId,
+        ObjectId userId,
+        ObjectId regionId,
         String title,
         String content,
         String poster,
@@ -33,11 +33,12 @@ public record MarkingResponse (
                 .content(marking.getContent())
                 .poster(marking.getPoster())
                 .trashTypes(marking.getTrashTypes())
-                .location(GeoJsonPointResponse.from(marking.getLocation())) // 기존 로케이션 그대로 전달
+                .location(GeoJsonPointResponse.from(marking.getLocation()))
                 .files(marking.getFiles() != null ?
-                        marking.getFiles().stream().map(FileResponse::from).toList() :
-                        List.of())
-                .createdAt(marking.getCreatedAt().atOffset(ZoneOffset.UTC)) // OffsetDateTime으로 변환
+                        marking.getFiles().stream()
+                                .map(FileResponse::from)
+                                .toList() : List.of())
+                .createdAt(marking.getCreatedAt().atOffset(ZoneOffset.UTC))
                 .isApproved(marking.getIsApproved())
                 .category(marking.getCategory())
                 .build();
