@@ -1,5 +1,5 @@
 input UpdateMarkingInput {
-    regionId: String
+    regionId: ID
     title: String
     content: String
     poster: String
