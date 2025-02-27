@@ -1,7 +1,7 @@
 type Marking {
     id: ID!
-    userId: String!
-    regionId: String!
+    userId: ID!
+    regionId: ID!
     title: String
     content: String
     poster: String
