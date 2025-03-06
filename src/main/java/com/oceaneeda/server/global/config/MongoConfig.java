@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableMongoAuditing
-//@EnableTransactionManagement 기본적으로 활성되어 있음
+@EnableTransactionManagement
 public class MongoConfig {
 
     @Bean
