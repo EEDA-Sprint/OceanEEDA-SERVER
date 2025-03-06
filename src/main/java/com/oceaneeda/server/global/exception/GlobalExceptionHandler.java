@@ -3,9 +3,12 @@ package com.oceaneeda.server.global.exception;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
+import jakarta.servlet.ServletException;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 
@@ -24,6 +27,17 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
                             "errorCode", oceaneedaException.getErrorCode(),
                             "httpStatus", status.value(), // HTTP 상태 코드 추가
                             "httpStatusMessage", status.getReasonPhrase() // HTTP 상태 메시지 추가
+                    ))
+                    .build();
+        } else if (ex instanceof IllegalArgumentException || ex instanceof MethodArgumentTypeMismatchException || ex instanceof BindException) {
+            return GraphqlErrorBuilder.newError()
+                    .message("입력 값이 올바르지 않습니다: " + ex.getMessage())
+                    .errorType(graphql.ErrorType.ValidationError)
+                    .path(env.getExecutionStepInfo().getPath())
+                    .extensions(Map.of(
+                            "errorCode", "INVALID_INPUT",
+                            "httpStatus", HttpStatus.BAD_REQUEST.value(),
+                            "httpStatusMessage", HttpStatus.BAD_REQUEST.getReasonPhrase()
                     ))
                     .build();
         }
