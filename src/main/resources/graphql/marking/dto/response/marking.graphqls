@@ -5,9 +5,9 @@ type Marking {
     title: String
     content: String
     poster: String
-    trashTypes: [String!]
+    trashTypes: [String]
     location: GeoJsonPoint
-    files: [File!]
+    files: [File]
     createdAt: DateTime
     isApproved: Boolean
     category: Category
