@@ -1,5 +1,6 @@
 package com.oceaneeda.server.domain.marking.presentation;
 
+import com.oceaneeda.server.domain.auth.annotation.LoginOrNot;
 import com.oceaneeda.server.domain.auth.annotation.PublicOrOwner;
 import com.oceaneeda.server.domain.auth.service.implementation.AuthReader;
 import com.oceaneeda.server.domain.marking.domain.Marking;
@@ -26,6 +27,7 @@ public class MarkingQueryController {
         return MarkingResponse.from(queryMarkingService.readOne(id));
     }
 
+    @LoginOrNot
     @QueryMapping
     public List<MarkingResponse> getAllMarkings() {
         return queryMarkingService.readAll(authReader.getNullableCurrentUser()).stream()
