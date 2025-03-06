@@ -1,4 +1,5 @@
 input FileInput {
     name: String!
-    file: Upload!
+    path: String!
+    order: Int!
 }

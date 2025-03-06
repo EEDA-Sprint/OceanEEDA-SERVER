@@ -1,4 +1,5 @@
 type File {
-    name: String!
-    path: String!
+    name: String
+    path: String
+    order: Int
 }
