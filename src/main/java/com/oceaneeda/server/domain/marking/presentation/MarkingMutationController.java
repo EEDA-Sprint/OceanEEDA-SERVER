@@ -23,19 +23,19 @@ public class MarkingMutationController {
 
     @Authenticated
     @MutationMapping
-    public MarkingResponse create(@Argument MarkingInput input) {
+    public MarkingResponse createMarking(@Argument MarkingInput input) {
         return MarkingResponse.from(commandMarkingService.createMarking(input.toEntity(), authReader.getCurrentUser()));
     }
 
     @OwnerOnly(resourceType = Marking.class)
     @MutationMapping
-    public MarkingResponse update(@Argument ObjectId id, @Argument MarkingInput input) {
+    public MarkingResponse updateMarking(@Argument ObjectId id, @Argument MarkingInput input) {
         return MarkingResponse.from(commandMarkingService.updateMarking(id, input.toEntity()));
     }
 
     @OwnerOnly(resourceType = Marking.class)
     @MutationMapping
-    public MarkingResponse delete(@Argument ObjectId id) {
+    public MarkingResponse deleteMarking(@Argument ObjectId id) {
         return MarkingResponse.from(commandMarkingService.deleteMarking(id));
     }
 }
