@@ -32,7 +32,7 @@ public class TokenProvider {
     private String createToken(User user, long expireLength) {
         Date expiration = new Date(System.currentTimeMillis() + expireLength);
         return Jwts.builder()
-                .claim("sub", user.getId())
+                .claim("sub", user.getId().toHexString())
                 .expiration(expiration)
                 .signWith(jwtCredentials.secretKey())
                 .compact();
