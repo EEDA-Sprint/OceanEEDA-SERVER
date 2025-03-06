@@ -18,15 +18,16 @@ public class JwtParser {
 
     public ObjectId getIdFromJwt(String jwt) {
         try {
-            return Jwts.parser()
+            return new ObjectId(Jwts.parser()
                     .verifyWith(jwtCredentials.secretKey())
                     .build()
                     .parseSignedClaims(jwt)
                     .getPayload()
-                    .get(ID, ObjectId.class);
+                    .get(ID, String.class));
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException();
         } catch (JwtException e) {
+            System.out.println("JWT Exception : " + e.getMessage());
             throw new TokenInvalidException();
         }
     }
