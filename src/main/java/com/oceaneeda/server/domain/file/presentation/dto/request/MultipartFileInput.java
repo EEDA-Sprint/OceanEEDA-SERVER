@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public record PathInput(
+public record MultipartFileInput(
         List<MultipartFile> files
 ) {
 }
