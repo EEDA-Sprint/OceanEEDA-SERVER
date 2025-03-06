@@ -4,6 +4,7 @@ import com.oceaneeda.server.domain.marking.domain.Marking;
 import com.oceaneeda.server.domain.marking.domain.value.Category;
 import org.bson.types.ObjectId;
 
+import java.util.Collections;
 import java.util.List;
 
 public record MarkingInput(
@@ -24,10 +25,10 @@ public record MarkingInput(
                 .content(content)
                 .poster(poster)
                 .trashTypes(trashTypes)
-                .location(location.toGeoJsonPoint())
-                .files(files.stream()
+                .location(location != null ? location.toGeoJsonPoint() : null)
+                .files(files != null ? files.stream()
                         .map(FileInput::toDomain)
-                        .toList())
+                        .toList() : Collections.emptyList())
                 .isApproved(isApproved)
                 .category(category)
                 .build();

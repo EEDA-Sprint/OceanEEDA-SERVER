@@ -33,7 +33,8 @@ public record MarkingResponse (
                 .content(marking.getContent())
                 .poster(marking.getPoster())
                 .trashTypes(marking.getTrashTypes())
-                .location(GeoJsonPointResponse.from(marking.getLocation()))
+                .location(marking.getLocation() != null ?
+                        GeoJsonPointResponse.from(marking.getLocation()) : null)
                 .files(marking.getFiles() != null ?
                         marking.getFiles().stream()
                                 .map(FileResponse::from)
