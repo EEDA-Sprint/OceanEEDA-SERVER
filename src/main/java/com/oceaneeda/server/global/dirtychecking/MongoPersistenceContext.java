@@ -2,9 +2,9 @@ package com.oceaneeda.server.global.dirtychecking;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.Advised;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Proxy;
@@ -15,11 +15,14 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class MongoPersistenceContext {
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+    private final ObjectMapper objectMapper;
     private final Map<Object, Object> entitySnapshot = new HashMap<>();
+
+    @Autowired
+    public MongoPersistenceContext(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     public void persist(Object entity) {
         if (entity == null) {
@@ -38,7 +41,12 @@ public class MongoPersistenceContext {
             return;
         }
 
-        entitySnapshot.put(entity, cloneEntity(entity));
+        try {
+            entitySnapshot.put(entity, cloneEntity(entity));
+        } catch (Exception e) {
+            log.warn("엔티티 복제 중 오류 발생, 이 엔티티는 더티 체킹에서 제외됨: {}, 오류: {}",
+                    entity.getClass().getName(), e.getMessage());
+        }
     }
 
     public boolean isDirty(Object entity) {
@@ -53,7 +61,8 @@ public class MongoPersistenceContext {
 
             return !originalJson.equals(currentJson);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to compare entities: " + e.getMessage(), e);
+            log.warn("엔티티 비교 중 오류 발생: {}", e.getMessage());
+            return false; // 비교할 수 없는 경우 변경되지 않은 것으로 간주
         }
     }
 

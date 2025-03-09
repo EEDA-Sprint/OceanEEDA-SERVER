@@ -1,5 +1,6 @@
 package com.oceaneeda.server.global.dirtychecking;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MongoDirtyCheckingAutoConfig {
     @Bean
-    public MongoPersistenceContext mongoPersistenceContext() {
-        return new MongoPersistenceContext();
+    public MongoPersistenceContext mongoPersistenceContext(ObjectMapper objectMapper) {
+        return new MongoPersistenceContext(objectMapper);
     }
 
     @Bean
