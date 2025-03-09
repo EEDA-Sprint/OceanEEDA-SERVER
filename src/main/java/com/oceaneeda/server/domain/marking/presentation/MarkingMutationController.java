@@ -1,6 +1,7 @@
 package com.oceaneeda.server.domain.marking.presentation;
 
 import com.oceaneeda.server.domain.auth.annotation.Authenticated;
+import com.oceaneeda.server.domain.auth.annotation.FieldPermission;
 import com.oceaneeda.server.domain.auth.annotation.OwnerOnly;
 import com.oceaneeda.server.domain.auth.service.implementation.AuthReader;
 import com.oceaneeda.server.domain.marking.domain.Marking;
@@ -22,12 +23,14 @@ public class MarkingMutationController {
     private final AuthReader authReader;
 
     @Authenticated
+    @FieldPermission(inputType = MarkingInput.class, fieldName = "isApproved")
     @MutationMapping
     public MarkingResponse createMarking(@Argument MarkingInput input) {
         return MarkingResponse.from(commandMarkingService.createMarking(input.toEntity(), authReader.getCurrentUser()));
     }
 
     @OwnerOnly(resourceType = Marking.class)
+    @FieldPermission(inputType = MarkingInput.class, fieldName = "isApproved")
     @MutationMapping
     public MarkingResponse updateMarking(@Argument ObjectId id, @Argument MarkingInput input) {
         return MarkingResponse.from(commandMarkingService.updateMarking(id, input.toEntity()));
