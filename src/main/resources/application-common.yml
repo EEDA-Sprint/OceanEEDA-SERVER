@@ -2,6 +2,7 @@ spring:
   data:
     mongodb:
       uri: ${DB_URL}
+      auto-index-creation: true
 
   servlet:
     multipart:
