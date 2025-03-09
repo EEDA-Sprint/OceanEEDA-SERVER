@@ -23,7 +23,6 @@ public class AuthMutationController {
 
     @MutationMapping
     public TokenResponse refresh(@Argument RefreshInput input) {
-
         return TokenResponse.from(commandAuthService.refresh(input.refreshToken()));
     }
 
