@@ -124,6 +124,10 @@ public class ExceptionDocController {
         html.append("        .status-404 { color: #f39c12; }\n");
         html.append("        .status-500 { color: #c0392b; }\n");
         html.append("        .class-name { color: #7f8c8d; font-size: 0.8em; font-style: italic; }\n");
+        html.append("        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }\n");
+        html.append("        .response-format { background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin-top: 50px; }\n");
+        html.append("        .response-example { background-color: #f0f8ff; padding: 20px; border-radius: 5px; margin: 20px 0; }\n");
+        html.append("        .auth-example { background-color: #fff0f0; padding: 20px; border-radius: 5px; margin: 20px 0; }\n");
         html.append("    </style>\n");
         html.append("</head>\n");
         html.append("<body>\n");
@@ -167,6 +171,89 @@ public class ExceptionDocController {
             html.append("    </table>\n");
         }
 
+        // 예외 반환 형식 섹션 추가
+        html.append("    <div class=\"response-format\">\n");
+        html.append("        <h2>예외 반환 형식</h2>\n");
+        html.append("        <p>OceanEEDA API는 GraphQL 형식의 에러 응답을 반환합니다. 모든 에러는 다음과 같은 구조로 반환됩니다.</p>\n");
+        html.append("        <pre>{\n");
+        html.append("  \"errors\": [\n");
+        html.append("    {\n");
+        html.append("      \"message\": \"에러 메시지\",\n");
+        html.append("      \"locations\": [],\n");
+        html.append("      \"path\": [\"요청 경로\"],\n");
+        html.append("      \"extensions\": {\n");
+        html.append("        \"httpStatusMessage\": \"HTTP 상태 메시지\",\n");
+        html.append("        \"errorCode\": \"에러 코드\",\n");
+        html.append("        \"httpStatus\": HTTP 상태 코드,\n");
+        html.append("        \"classification\": \"예외 분류\"\n");
+        html.append("      }\n");
+        html.append("    }\n");
+        html.append("  ],\n");
+        html.append("  \"data\": null\n");
+        html.append("}</pre>\n");
+
+        // 일반 예외 반환 예시
+        html.append("        <div class=\"response-example\">\n");
+        html.append("            <h3>일반 예외 반환 예시</h3>\n");
+        html.append("            <h4>1. 인증 예외</h4>\n");
+        html.append("            <pre>{\n");
+        html.append("  \"errors\": [\n");
+        html.append("    {\n");
+        html.append("      \"message\": \"유저가 로그인하지 않았습니다.\",\n");
+        html.append("      \"locations\": [],\n");
+        html.append("      \"path\": [\"createRegion\"],\n");
+        html.append("      \"extensions\": {\n");
+        html.append("        \"httpStatusMessage\": \"Unauthorized\",\n");
+        html.append("        \"errorCode\": \"AUTH-401-5\",\n");
+        html.append("        \"httpStatus\": 401,\n");
+        html.append("        \"classification\": \"DataFetchingException\"\n");
+        html.append("      }\n");
+        html.append("    }\n");
+        html.append("  ],\n");
+        html.append("  \"data\": null\n");
+        html.append("}</pre>\n");
+
+        // 유효성 검증 예외 예시
+        html.append("            <h4>2. 유효성 검증 예외</h4>\n");
+        html.append("            <pre>{\n");
+        html.append("  \"errors\": [\n");
+        html.append("    {\n");
+        html.append("      \"message\": \"입력 값이 올바르지 않습니다: org.springframework.graphql.data.GraphQlArgumentBinder$ArgumentsBindingResult: 1 errors\\nField error in object 'markingInput' on field '$.regionId': rejected value [ㅇ]; codes [typeMismatch.markingInput,typeMismatch]; arguments []; default message [Failed to convert argument value]\",\n");
+        html.append("      \"locations\": [],\n");
+        html.append("      \"path\": [\"createMarking\"],\n");
+        html.append("      \"extensions\": {\n");
+        html.append("        \"httpStatusMessage\": \"Bad Request\",\n");
+        html.append("        \"errorCode\": \"INVALID_INPUT\",\n");
+        html.append("        \"httpStatus\": 400,\n");
+        html.append("        \"classification\": \"ValidationError\"\n");
+        html.append("      }\n");
+        html.append("    }\n");
+        html.append("  ],\n");
+        html.append("  \"data\": null\n");
+        html.append("}</pre>\n");
+        html.append("        </div>\n");
+
+        // 인증/인가 예외 반환 섹션
+        html.append("        <div class=\"auth-example\">\n");
+        html.append("            <h3>인증/인가 관련 예외 반환 예시</h3>\n");
+        html.append("            <pre>{\n");
+        html.append("  \"errors\": [\n");
+        html.append("    {\n");
+        html.append("      \"message\": \"토큰이 유효하지 않습니다.\",\n");
+        html.append("      \"extensions\": {\n");
+        html.append("        \"httpStatus\": 401,\n");
+        html.append("        \"errorCode\": \"AUTH-401-2\",\n");
+        html.append("        \"httpStatusMessage\": \"Unauthorized\",\n");
+        html.append("        \"classification\": \"DataFetchingException\"\n");
+        html.append("      }\n");
+        html.append("    }\n");
+        html.append("  ],\n");
+        html.append("  \"data\": null\n");
+        html.append("}</pre>\n");
+        html.append("            <p>인증/인가 관련 예외의 경우 locations 및 path가 생략될 수 있습니다.</p>\n");
+        html.append("        </div>\n");
+        html.append("    </div>\n");
+
         html.append("</body>\n");
         html.append("</html>");
 
@@ -193,12 +280,12 @@ public class ExceptionDocController {
         }
     }
 
-        private record ExceptionInfo(
-                String category,
-                String errorCode,
-                HttpStatus status,
-                String message,
-                String className
-        ) {
+    private record ExceptionInfo(
+            String category,
+            String errorCode,
+            HttpStatus status,
+            String message,
+            String className
+    ) {
     }
 }
