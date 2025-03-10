@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
                     .build();
         } else if (ex instanceof DuplicateKeyException) {
             return GraphqlErrorBuilder.newError()
-                    .message("값이 이미 존재합니다.: " + ex.getMessage())
+                    .message("MongoDB 유니크 제약이 위반되었습니다.: " + ex.getMessage())
                     .errorType(ErrorType.DataFetchingException)
                     .path(env.getExecutionStepInfo().getPath())
                     .extensions(Map.of(
