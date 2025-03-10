@@ -78,7 +78,7 @@ public class ExceptionDocController {
                 Constructor<? extends OceaneedaException> constructor =
                         clazz.getDeclaredConstructor(String.class);
                 constructor.setAccessible(true);
-                return constructor.newInstance("tempId");
+                return constructor.newInstance("{identifier}");
             } catch (Exception e2) {
                 // 3. Long 파라미터 생성자 시도
                 try {
