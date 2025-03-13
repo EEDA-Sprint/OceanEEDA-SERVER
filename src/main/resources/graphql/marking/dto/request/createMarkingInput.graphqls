@@ -6,6 +6,6 @@ input CreateMarkingInput {
     trashTypes: [String!]
     location: GeoJsonPointInput
     files: [FileInput]
-    isApproved: Boolean
+    isApproved: Boolean!
     category: Category
 }
