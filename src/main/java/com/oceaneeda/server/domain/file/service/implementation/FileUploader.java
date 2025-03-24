@@ -26,6 +26,6 @@ public class FileUploader {
     }
 
     private String createFileName(MultipartFile file) {
-        return file.getOriginalFilename() + "_" + UUID.randomUUID();
+        return  UUID.randomUUID() + "_" + file.getOriginalFilename();
     }
 }
